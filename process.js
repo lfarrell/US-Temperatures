@@ -7,36 +7,44 @@ fs.readFile('all.csv', 'utf8', function(err, data) {
     var all_years = [];
     var csv_data = d3.csv.parse(data);
     var udx = crossfilter(csv_data);
-    var year = udx.dimension(function(d) { return d.Year; });
+    var year = udx.dimension(function(d) { return d.date; });
     var month_counts, actual_counts, month, month_avg;
 
-    for(var i=0; i<=12; i++) {
-        month_counts = year.group().reduceCount(function(d) {
-            if(d[i] !== -99.99) {
-                return d[i];
-            } else {
-                return 0;
-            }
-        });
-        actual_counts = month_counts.top(Infinity);
+    month_counts = year.group().reduceCount(function(d) { return d.date;});
+    actual_counts = month_counts.top(Infinity);
 
-        month = year.group().reduceSum(function(d) {
-            if(d[i] !== -99.99) {
-                return d[i];
-            } else {
-                return 0;
-            }
-        });
-        month_avg =  month.top(Infinity);
+    month = year.group().reduceSum(function(d) { return d.value; });
+    month_avg =  month.top(Infinity);
 
-        month_avg.forEach(function(d, i) {
-            var year_count = _.findWhere(actual_counts, function(g){ return g.key === d.key; });
-            var monthly_avg = Math.round(d.value / year_count.value , 1);
-            all_years.push({month_year: (i + 1) + '/' + d.key, average: monthly_avg});
-        });
-    }
+    month_avg.forEach(function(d, i) {
+        var year_count = _.findWhere(actual_counts, function(g){ return g.key === d.key; });
+        var monthly_avg = (d.value / year_count.value).toFixed(2);
 
-    fs.writeFile('data.json', JSON.stringify(all_years, null, 4), function(err) {
+        if(!/^\d{2}/.test(d.key)) d.key = '0' + d.key;
+        var year = d.key.split('/')[1];
+        all_years.push({month_year: d.key, average: monthly_avg, year: year });
+    });
+
+    all_years.sort(function(a, b) {
+        var date_one_parts = a.month_year.split('/');
+        var date_two_parts = b.month_year.split('/');
+        var date_one = new Date(date_one_parts[1], date_one_parts[0] - 1);
+        var date_two = new Date(date_two_parts[1], date_two_parts[0] - 1);
+
+        if(date_one < date_two) {
+            return -1;
+        } else if(date_one > date_two) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+
+    var all_sorted = d3.nest()
+        .key(function(d) { return d.year; })
+        .entries(all_years);
+
+    fs.writeFile('data.json', JSON.stringify(all_sorted, null, 4), function(err) {
         if(err) {
             console.log(err);
         } else {
