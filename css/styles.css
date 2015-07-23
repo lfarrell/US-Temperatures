@@ -1,0 +1,60 @@
+body {
+    background-color: lightslategray;
+    font-family: 'Roboto', sans-serif;
+    color: whitesmoke;
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+.center {
+    text-align: center;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    padding: 5px;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+text {
+    stroke: whitesmoke;
+    fill: whitesmoke;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: left;
+    width: auto;
+    height: auto;
+    padding: 5px;
+    fill: black;
+    background: black;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.box-group {
+    stroke: lightgray;
+    stroke-width: 1;
+}
+
+.box-group:hover {
+    opacity: 0.5;
+}
+
+.hide {
+    display: none;
+}
+
+#heatmap {
+    margin-top: -30px;
+}
+
+a, a:hover {
+    color: whitesmoke;
+}
