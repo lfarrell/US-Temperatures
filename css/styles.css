@@ -58,6 +58,10 @@ p {
     margin-right: 20px;
     margin-left: 20px;
 }
+
+#note p {
+    font-size: 3em;
+}
 #heatmap {
     margin-top: -30px;
 }

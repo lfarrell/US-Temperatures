@@ -160,6 +160,7 @@ d3.csv('world/all.csv', function(world) {
              dc.renderAll();
          }
         d3.selectAll(".hide").classed('hide', false);
+        d3.select("#note").classed('hide', true);
     });
 });
 
