@@ -1,6 +1,6 @@
 <?php
 $months = range(1,12);
-
+/*
 foreach($months as $month) {
    // if($month < 10) { $month = "0" . $month; }
 
@@ -18,7 +18,7 @@ foreach($months as $month) {
 
 
     echo $month . " processed\n";
-}
+} */
 
 $files = scandir('world');
 
@@ -32,8 +32,9 @@ foreach($files as $file) {
 
         if (($handle = fopen("world/" . $file, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                if(preg_match('/^\d/', $data[0])) {
+                if(preg_match('/^\d/', $data[0]) &&  $data[0] > 1894) {
                     $data[0] =  $month . '/' . $data[0];
+                 //   $data[1] = ($data[1] * 9/5);
                     fputcsv($fh, $data);
                 }
             }

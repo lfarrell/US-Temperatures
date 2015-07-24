@@ -5,8 +5,9 @@ foreach($months as $month) {
     if($month < 10) { $month = "0" . $month; }
 
     $links = [
-       'temp' =>  "http://www.ncdc.noaa.gov/cag/time-series/us/110/00/tavg/1/$month/1895-2014.csv?base_prd=true&firstbaseyear=1895&lastbaseyear=2014",
-       'precip' => "http://www.ncdc.noaa.gov/cag/time-series/us/110/00/pcp/1/$month/1895-2014.csv?base_prd=true&firstbaseyear=1895&lastbaseyear=2014"
+       'temp' => "http://www.ncdc.noaa.gov/cag/time-series/us/110/00/tavg/1/$month/1895-2015.csv?base_prd=true&firstbaseyear=1901&lastbaseyear=2000",
+   //    'temp' =>  "http://www.ncdc.noaa.gov/cag/time-series/us/110/00/tavg/1/$month/1895-2015.csv?base_prd=true&firstbaseyear=1895&lastbaseyear=2015",
+     //  'precip' => "http://www.ncdc.noaa.gov/cag/time-series/us/110/00/pcp/1/$month/1895-2015.csv?base_prd=true&firstbaseyear=1895&lastbaseyear=2015"
     ];
 
     foreach($links as $type => $link) {
@@ -105,20 +106,16 @@ $state_list = array(
 
 $files = scandir('us_all_data/temp');
 $fh = fopen("us_all.csv", "wb");
-fputcsv($fh, ['date', 'value', 'anomaly']);
+fputcsv($fh, ['date', 'value', 'anomaly', 'state']);
 
 foreach($files as $file) {
     if(!is_dir($file) || !preg_match('/^./', $file)) {
         if (($handle = fopen("us_all_data/temp/" . $file, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                if(!$i && preg_match('/^Date/', $data[0])) {
-                    fputcsv($fh, $data);
-                    $i++;
-                }
-
                 if(preg_match('/^\d/', $data[0])) {
                     $date = str_split($data[0], 2);
                     $data[0] = $date[2] . '/' . $date[0] . $date[1];
+                    $data[3] = 'US';
                     fputcsv($fh, $data);
                 }
             }
