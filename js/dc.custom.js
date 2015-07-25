@@ -119,7 +119,7 @@ d3.csv('world/all.csv', function(world) {
                 d3.selectAll("#world_heat .box-group").on("mouseover", function(d) {
                     var text = "Date: " + months(d.key[0]) +", " + d.key[1] + "<br/>" +
                       //  "Temperature: " + d.temp + " degrees (F)<br/>" +
-                        "Anomaly: " + d.value + " degrees (C)";
+                        "Anomaly: " + d.value + " degrees (F)";
 
                     tip.transition()
                         .duration(200)

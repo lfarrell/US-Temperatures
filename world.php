@@ -33,8 +33,8 @@ foreach($files as $file) {
         if (($handle = fopen("world/" . $file, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 if(preg_match('/^\d/', $data[0]) &&  $data[0] > 1894) {
-                    $data[0] =  $month . '/' . $data[0];
-                 //   $data[1] = ($data[1] * 9/5);
+                    $data[0] = $month . '/' . $data[0];
+                    $data[1] = number_format(($data[1] * 1.8), 2, '.', '');
                     fputcsv($fh, $data);
                 }
             }

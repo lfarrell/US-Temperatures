@@ -51,71 +51,97 @@ foreach($state_nums as $state_num) {
     }
 
     echo $state_num . "processed\n";
-}
-*/
-$state_list = array(
-    'AL'=>"Alabama",
-    'AZ'=>"Arizona",
-    'AR'=>"Arkansas",
-    'CA'=>"California",
-    'CO'=>"Colorado",
-    'CT'=>"Connecticut",
-    'DE'=>"Delaware",
-    'FL'=>"Florida",
-    'GA'=>"Georgia",
-    'ID'=>"Idaho",
-    'IL'=>"Illinois",
-    'IN'=>"Indiana",
-    'IA'=>"Iowa",
-    'KS'=>"Kansas",
-    'KY'=>"Kentucky",
-    'LA'=>"Louisiana",
-    'ME'=>"Maine",
-    'MD'=>"Maryland",
-    'MA'=>"Massachusetts",
-    'MI'=>"Michigan",
-    'MN'=>"Minnesota",
-    'MS'=>"Mississippi",
-    'MO'=>"Missouri",
-    'MT'=>"Montana",
-    'NE'=>"Nebraska",
-    'NV'=>"Nevada",
-    'NH'=>"New Hampshire",
-    'NJ'=>"New Jersey",
-    'NM'=>"New Mexico",
-    'NY'=>"New York",
-    'NC'=>"North Carolina",
-    'ND'=>"North Dakota",
-    'OH'=>"Ohio",
-    'OK'=>"Oklahoma",
-    'OR'=>"Oregon",
-    'PA'=>"Pennsylvania",
-    'RI'=>"Rhode Island",
-    'SC'=>"South Carolina",
-    'SD'=>"South Dakota",
-    'TN'=>"Tennessee",
-    'TX'=>"Texas",
-    'UT'=>"Utah",
-    'VT'=>"Vermont",
-    'VA'=>"Virginia",
-    'WA'=>"Washington",
-    'WV'=>"West Virginia",
-    'WI'=>"Wisconsin",
-    'WY'=>"Wyoming"
-);
+} */
 
-$files = scandir('us_all_data/temp');
-$fh = fopen("us_all.csv", "wb");
+$state_list = array(
+    'AL',
+    'AZ',
+    'AR',
+    'CA',
+    'CO',
+    'CT',
+    'DE',
+    'FL',
+    'GA',
+    'ID',
+    'IL',
+    'IN',
+    'IA',
+    'KS',
+    'KY',
+    'LA',
+    'ME',
+    'MD',
+    'MA',
+    'MI',
+    'MN',
+    'MS',
+    'MO',
+    'MT',
+    'NE',
+    'NV',
+    'NH',
+    'NJ',
+    'NM',
+    'NY',
+    'NC',
+    'ND',
+    'OH',
+    'OK',
+    'OR',
+    'PA',
+    'RI',
+    'SC',
+    'SD',
+    'TN',
+    'TX',
+    'UT',
+    'VT',
+    'VA',
+    'WA',
+    'WV',
+    'WI',
+    'WY'
+);
+/*
+// Us all temps
+$files = scandir('us_all_data/precip');
+$fh = fopen("us_precip_all.csv", "wb");
 fputcsv($fh, ['date', 'value', 'anomaly', 'state']);
 
 foreach($files as $file) {
     if(!is_dir($file) || !preg_match('/^./', $file)) {
-        if (($handle = fopen("us_all_data/temp/" . $file, "r")) !== FALSE) {
+        if (($handle = fopen("us_all_data/precip/" . $file, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 if(preg_match('/^\d/', $data[0])) {
                     $date = str_split($data[0], 2);
                     $data[0] = $date[2] . '/' . $date[0] . $date[1];
                     $data[3] = 'US';
+                    fputcsv($fh, $data);
+                }
+            }
+            fclose($handle);
+        }
+    }
+}
+fclose($fh);
+*/
+// State precip
+$files = scandir('us_all_data/states_precip');
+$fh = fopen("states_precip_all.csv", "wb");
+fputcsv($fh, ['date', 'value', 'anomaly', 'state']);
+
+foreach($files as $file) {
+    if(!is_dir($file) || !preg_match('/^./', $file)) {
+        $state_num = preg_split('/_/', $file);
+        $state_abbr = $state_list[$state_num[0] - 1];
+
+        if (($handle = fopen("us_all_data/states_precip/" . $file, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if(preg_match('/^\d/', $data[0])) {
+                    $date = str_split($data[0], 2);
+                    $data[0] = $date[2] . '/' . $date[0] . $date[1];
+                    $data[3] = $state_abbr;
                     fputcsv($fh, $data);
                 }
             }
