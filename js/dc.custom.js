@@ -19,6 +19,7 @@ d3.csv('world/all.csv', function(world) {
         d.date = format(d.date);
         d.month = d3.time.month(d.date).getMonth();
         d.year = d3.time.year(d.date).getFullYear();
+        //  d.value = +d.value;
         d.anomaly = +d.anomaly;
     });
 
@@ -30,9 +31,6 @@ d3.csv('world/all.csv', function(world) {
             d.value = +d.value;
             d.anomaly = +d.anomaly;
         });
-
-        var all_data = world.concat(data);
-        var color_domain = d3.extent(all_data, function(d) { return d.anomaly; })
 
         var dx = crossfilter(world),
             ndx = crossfilter(data),
@@ -65,8 +63,7 @@ d3.csv('world/all.csv', function(world) {
             .colorAccessor(function(d) { return +d.value; })
             // .colors(["#2c7bb6", "#abd9e9", "#fdae61", "#d7191c"])
             .colors(colors)
-            .colorDomain(color_domain)
-           // .calculateColorDomain()
+            .calculateColorDomain()
             .on('renderlet', function(chart){
                 d3.selectAll("#us_heat g.cols text").each(function(d) {
                     var name = d3.select(this);
@@ -109,8 +106,7 @@ d3.csv('world/all.csv', function(world) {
             .valueAccessor(function(d) { return +d.key[1]; })
             .colorAccessor(function(d) { return +d.value; })
             .colors(colors)
-            .colorDomain(color_domain)
-       //     .calculateColorDomain()
+            .calculateColorDomain()
             .on('renderlet', function(chart){
                 d3.selectAll("#world_heat g.cols text").each(function(d) {
                     var name = d3.select(this);
@@ -122,8 +118,8 @@ d3.csv('world/all.csv', function(world) {
 
                 d3.selectAll("#world_heat .box-group").on("mouseover", function(d) {
                     var text = "Date: " + months(d.key[0]) +", " + d.key[1] + "<br/>" +
-                      //  "Temperature: " + d.temp + " degrees (F)<br/>" +
-                        "Anomaly: " + d.value + " degrees (F)";
+                        //  "Temperature: " + d.temp + " degrees (F)<br/>" +
+                        "Anomaly: " + d.value + " degrees (C)";
 
                     tip.transition()
                         .duration(200)
@@ -144,25 +140,25 @@ d3.csv('world/all.csv', function(world) {
 
 
         /*  var map = dc.geoChoroplethChart("#map");
-          var choropleth = ndx.dimension(function(d) { return d.state; });
+         var choropleth = ndx.dimension(function(d) { return d.state; });
 
-          map.width(width)
-          .height(500)
-          .dimension(choropleth)
-          .group(all_group)
-          .colors(d3.scale.quantize().range(colors))
-          .colorDomain([0, 200])
-          .colorCalculator(function (d) { return d ? map.colors()(d) : '#ccc'; })
-          .overlayGeoJson(topo.features, "state", function (d) {
-             return d.properties.name;
-          });
+         map.width(width)
+         .height(500)
+         .dimension(choropleth)
+         .group(all_group)
+         .colors(d3.scale.quantize().range(colors))
+         .colorDomain([0, 200])
+         .colorCalculator(function (d) { return d ? map.colors()(d) : '#ccc'; })
+         .overlayGeoJson(topo.features, "state", function (d) {
+         return d.properties.name;
+         });
 
          */
 
-         function resetAll() {
-             dc.filterAll();
-             dc.renderAll();
-         }
+        function resetAll() {
+            dc.filterAll();
+            dc.renderAll();
+        }
         d3.selectAll(".hide").classed('hide', false);
         d3.select("#note").classed('hide', true);
     });
